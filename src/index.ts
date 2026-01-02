@@ -5,7 +5,12 @@ import { env } from './config.js';
 
 const uploadDir = path.resolve(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+        fs.mkdirSync(uploadDir, { recursive: true });
+        console.log('Created uploads directory');
+    } catch (error) {
+        console.error('Failed to create uploads directory:', error);
+    }
 }
 
 const app = createApp();
