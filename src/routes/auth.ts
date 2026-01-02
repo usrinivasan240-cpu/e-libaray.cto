@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { OAuth2Client } from 'google-auth-library';
 import { prisma } from '../db.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { signAccessToken } from '../utils/jwt.js';
+import { parseRole, signAccessToken } from '../utils/jwt.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 import { env } from '../config.js';
 import { requireAuth } from '../middleware/auth.js';
@@ -74,7 +74,7 @@ router.post(
       },
     });
 
-    const token = signAccessToken({ userId: user.user_id, role: user.role });
+    const token = signAccessToken({ userId: user.user_id, role: parseRole(user.role) });
 
     return res.status(201).json({ token, user: publicUser(user) });
   }),
@@ -119,7 +119,7 @@ router.post(
         },
       });
 
-      const token = signAccessToken({ userId: user.user_id, role: user.role });
+      const token = signAccessToken({ userId: user.user_id, role: parseRole(user.role) });
 
       return res.json({
         token,
@@ -141,7 +141,7 @@ router.post(
         },
       });
 
-      const token = signAccessToken({ userId: created.user_id, role: created.role });
+      const token = signAccessToken({ userId: created.user_id, role: parseRole(created.role) });
       return res.status(201).json({ token, user: publicUser(created) });
     }
 
@@ -163,7 +163,7 @@ router.post(
       data: { last_login: new Date() },
     });
 
-    const token = signAccessToken({ userId: user.user_id, role: user.role });
+    const token = signAccessToken({ userId: user.user_id, role: parseRole(user.role) });
 
     return res.json({ token, user: publicUser(user) });
   }),
