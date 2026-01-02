@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  LIBRARY_ADMIN
+  SUPER_ADMIN
+}
+
+enum BookStatus {
+  AVAILABLE
+  ISSUED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMethod {
+  UPI
+  GPAY
+}
+
+model User {
+  user_id    String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  password   String?  // null when created via external auth
+  role       Role     @default(USER)
+  created_at DateTime @default(now())
+  last_login DateTime?
+
+  issues     BookIssue[]
+  print_jobs PrintJob[]
+  payments   Payment[]
+}
+
+model Book {
+  book_id           String     @id @default(cuid())
+  book_name         String
+  author_name       String
+  category          String
+  publication_year  Int
+  library_location  String
+  status            BookStatus @default(AVAILABLE)
+  created_at        DateTime   @default(now())
+
+  issues BookIssue[]
+
+  @@index([book_name])
+  @@index([author_name])
+  @@index([category])
+}
+
+model BookIssue {
+  issue_id      String   @id @default(cuid())
+  book_id       String
+  user_id       String
+  issued_date   DateTime @default(now())
+  due_date      DateTime
+  returned_date DateTime?
+
+  book Book @relation(fields: [book_id], references: [book_id])
+  user User @relation(fields: [user_id], references: [user_id])
+
+  @@index([book_id])
+  @@index([user_id])
+}
+
+model PrintJob {
+  print_id       String        @id @default(cuid())
+  user_id        String
+  file_name      String
+  storage_path   String
+  total_pages    Int
+  cost_per_page  Int
+  total_cost     Int
+  payment_status PaymentStatus @default(PENDING)
+  created_at     DateTime      @default(now())
+
+  user     User      @relation(fields: [user_id], references: [user_id])
+  payments Payment[]
+
+  @@index([user_id])
+}
+
+model Payment {
+  payment_id     String        @id @default(cuid())
+  user_id        String
+  print_id       String
+  payment_method PaymentMethod
+  transaction_id String?
+  payment_status PaymentStatus @default(PENDING)
+  paid_at        DateTime?
+  created_at     DateTime      @default(now())
+
+  user  User     @relation(fields: [user_id], references: [user_id])
+  print PrintJob @relation(fields: [print_id], references: [print_id])
+
+  @@index([user_id])
+  @@index([print_id])
+  @@index([transaction_id])
+}

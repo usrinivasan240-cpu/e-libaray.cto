@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Library Management System</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        margin: 0;
+        padding: 24px;
+        background: #f6f7fb;
+      }
+      .card {
+        max-width: 960px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      code {
+        background: #f2f2f2;
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      input,
+      button {
+        padding: 10px;
+        font-size: 14px;
+      }
+      button {
+        cursor: pointer;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .row > * {
+        flex: 1;
+        min-width: 220px;
+      }
+      pre {
+        background: #0b1020;
+        color: #e8f0ff;
+        padding: 12px;
+        border-radius: 12px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>E-Library Management System (API + Demo UI)</h1>
+      <p>
+        This is a minimal demo UI. Use the REST API endpoints as described in the project ticket.
+      </p>
+
+      <h2>Login (password)</h2>
+      <div class="row">
+        <input id="email" type="email" placeholder="email" value="student@example.com" />
+        <input id="password" type="password" placeholder="password" value="password123" />
+        <button id="loginBtn">Login / Auto-register</button>
+      </div>
+      <p>
+        The demo password login auto-creates a <code>USER</code> account if the email doesn't exist.
+        For admin accounts, use <code>SUPER_ADMIN</code> APIs.
+      </p>
+
+      <h2>Quick actions</h2>
+      <div class="row">
+        <button id="meBtn">GET /auth/user</button>
+        <button id="booksBtn">GET /books</button>
+        <button id="printHistoryBtn">GET /print/history</button>
+      </div>
+
+      <h2>Output</h2>
+      <pre id="out">(output will appear here)</pre>
+
+      <hr />
+      <p>
+        Health check: <code>/api/health</code>
+      </p>
+    </div>
+
+    <script src="/main.js"></script>
+  </body>
+</html>
