@@ -42,14 +42,14 @@ router.get(
           q
             ? {
                 OR: [
-                  { book_name: { contains: q, mode: 'insensitive' } },
-                  { author_name: { contains: q, mode: 'insensitive' } },
-                  { category: { contains: q, mode: 'insensitive' } },
+                  { book_name: { contains: q } },
+                  { author_name: { contains: q } },
+                  { category: { contains: q } },
                 ],
               }
             : {},
-          author ? { author_name: { contains: author, mode: 'insensitive' } } : {},
-          category ? { category: { contains: category, mode: 'insensitive' } } : {},
+          author ? { author_name: { contains: author } } : {},
+          category ? { category: { contains: category } } : {},
         ],
       },
       orderBy: { created_at: 'desc' },
@@ -79,9 +79,9 @@ router.get(
       where: q
         ? {
             OR: [
-              { book_name: { contains: q, mode: 'insensitive' } },
-              { author_name: { contains: q, mode: 'insensitive' } },
-              { category: { contains: q, mode: 'insensitive' } },
+              { book_name: { contains: q } },
+              { author_name: { contains: q } },
+              { category: { contains: q } },
             ],
           }
         : {},

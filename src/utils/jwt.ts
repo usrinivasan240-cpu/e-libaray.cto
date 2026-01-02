@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import { env } from '../config.js';
 
 export const ROLE_VALUES = ['USER', 'LIBRARY_ADMIN', 'SUPER_ADMIN'] as const;
@@ -15,7 +15,7 @@ export function parseRole(value: unknown): Role {
 }
 
 export function signAccessToken(user: JwtUser): string {
-  return jwt.sign(user, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN });
+  return jwt.sign(user, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN } as SignOptions);
 }
 
 export function verifyAccessToken(token: string): JwtUser {
