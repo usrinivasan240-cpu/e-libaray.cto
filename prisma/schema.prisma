@@ -7,34 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  LIBRARY_ADMIN
-  SUPER_ADMIN
-}
-
-enum BookStatus {
-  AVAILABLE
-  ISSUED
-}
-
-enum PaymentStatus {
-  PENDING
-  SUCCESS
-  FAILED
-}
-
-enum PaymentMethod {
-  UPI
-  GPAY
-}
-
 model User {
   user_id    String   @id @default(cuid())
   name       String
   email      String   @unique
-  password   String?  // null when created via external auth
-  role       Role     @default(USER)
+  password   String? // null when created via external auth
+  role       String   @default("USER")
   created_at DateTime @default(now())
   last_login DateTime?
 
@@ -44,14 +22,14 @@ model User {
 }
 
 model Book {
-  book_id           String     @id @default(cuid())
+  book_id           String   @id @default(cuid())
   book_name         String
   author_name       String
   category          String
   publication_year  Int
   library_location  String
-  status            BookStatus @default(AVAILABLE)
-  created_at        DateTime   @default(now())
+  status            String   @default("AVAILABLE")
+  created_at        DateTime @default(now())
 
   issues BookIssue[]
 
@@ -76,15 +54,15 @@ model BookIssue {
 }
 
 model PrintJob {
-  print_id       String        @id @default(cuid())
+  print_id       String   @id @default(cuid())
   user_id        String
   file_name      String
   storage_path   String
   total_pages    Int
   cost_per_page  Int
   total_cost     Int
-  payment_status PaymentStatus @default(PENDING)
-  created_at     DateTime      @default(now())
+  payment_status String   @default("PENDING")
+  created_at     DateTime @default(now())
 
   user     User      @relation(fields: [user_id], references: [user_id])
   payments Payment[]
@@ -93,14 +71,14 @@ model PrintJob {
 }
 
 model Payment {
-  payment_id     String        @id @default(cuid())
+  payment_id     String   @id @default(cuid())
   user_id        String
   print_id       String
-  payment_method PaymentMethod
+  payment_method String
   transaction_id String?
-  payment_status PaymentStatus @default(PENDING)
+  payment_status String   @default("PENDING")
   paid_at        DateTime?
-  created_at     DateTime      @default(now())
+  created_at     DateTime @default(now())
 
   user  User     @relation(fields: [user_id], references: [user_id])
   print PrintJob @relation(fields: [print_id], references: [print_id])
